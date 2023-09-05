@@ -1,98 +1,77 @@
 package org.example.config;
 
 import lombok.extern.log4j.Log4j2;
-import org.example.service.UserDetailsServiceImpl;
+import org.example.security.jwt.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 @Configuration
 @EnableWebSecurity
 @Log4j2
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
     @Autowired
-    public WebSecurityConfig(UserDetailsServiceImpl userDetailsServiceImpl) {
-        this.userDetailsServiceImpl = userDetailsServiceImpl;
-    }
+    public WebSecurityConfig(JwtAuthenticationFilter jwtAuthFilter, LogoutHandler logoutHandler) {
 
-    @Bean
-    public PasswordEncoder getPasswordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        this.jwtAuthFilter = jwtAuthFilter;
+        this.logoutHandler = logoutHandler;
     }
+    private final JwtAuthenticationFilter jwtAuthFilter;
+    private final LogoutHandler logoutHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.
-                csrf().disable()
+        http
+                .csrf().disable()
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers("/auth/login", "/auth/registration", "/auth/process_login", "/swagger-resources/**",
-                                        "/swagger-ui.html",
+                                .requestMatchers(
+                                        "/api/v1/auth/**",
+                                        "/v2/api-docs",
+                                        "/v3/api-docs",
+                                        "/v3/api-docs/**",
+                                        "/swagger-resources",
+                                        "/swagger-resources/**",
+                                        "/configuration/ui",
+                                        "/configuration/security",
+                                        "/swagger-ui/**",
                                         "/webjars/**",
-                                        "favicon.ico").permitAll()
-                                .requestMatchers("/admin/**").hasAnyAuthority("ADMIN", "MODERATOR")
+                                        "/swagger-ui.html"
+                                ).permitAll()
                                 .requestMatchers("/personal_account").authenticated()
                                 .anyRequest().permitAll())
-                .formLogin(form ->
-                        form.loginPage("/auth/login")
-                                .loginProcessingUrl("/auth/process_login")
-                                .failureUrl("/auth/login?error"))
-                .httpBasic()
+//                .formLogin(form ->
+//                        form.loginProcessingUrl("/api/v1/auth/authenticate")
+//                                .failureUrl("/auth/login?error"))
+//                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout()
+                .logoutUrl("/api/v1/auth/logout")
+                .addLogoutHandler(logoutHandler);
         ;
         return http.build();
     }
 
-}
-//public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
 
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeRequests()
-//                .antMatchers("/auth/login", "/auth/registration", "/auth/process_login").permitAll()
-//                .antMatchers("/admin/wewrr").hasAnyRole("ADMIN").anyRequest().authenticated()
-//                .and()
-//                .formLogin()
-//                .loginPage("/auth/login")
-//                .loginProcessingUrl("/auth/process_login")
-//                .defaultSuccessUrl("/admin", true)
-//                .failureUrl("/auth/login?error");
-////                .and()
-////                .sessionManagement()
-////                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
-//    }
-//    @Bean
-//    SecurityFilterChain configureSecurity(HttpSecurity http)
-//            throws Exception {
-//        http.authorizeHttpRequests() //
-//                .requestMatchers("/static/**", "/photos/**", "/auth/**")
-//                .permitAll() //
-//                .requestMatchers(HttpMethod.GET, "/admin/**")
-//                .hasRole("ADMIN") //
-//                .requestMatchers("/db/**").access((authentication,
-//                                                   object) -> {
-//                    boolean anyMissing = Stream.of("ADMIN",
-//                                    "DBA")//
-//                            .map(role -> hasRole(role)
-//                                    .check(authentication, object).isGranted()) //
-//                            .filter(granted -> !granted) //
-//                            .findAny() //
-//                            .orElse(false); //
-//                    return new AuthorizationDecision(!anyMissing);
-//                }) //
-//                .anyRequest().denyAll() //
-//                .and() //
-//                .formLogin() //
-//                .and() //
-//                .httpBasic();
-//        return http.build();
-//    }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
+    }
+}
+

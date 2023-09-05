@@ -91,8 +91,6 @@ public class CategoryAdminController {
     public ResponseEntity<Map<String, Object>> editCategoryAdminPageGet(@PathVariable String nameCategory, @PathVariable String nameClassification ) {
         CategoryDTO categoryDTO=new CategoryDTO();
         Map<String, Object> response = new HashMap<>();
-
-        log.info("wwwwwwwwwwwwwwwwwww" + contextPath);
         Optional<CategoryEntity> categoryEntity = categoryService.findByName(nameCategory);
         categoryDTO.setName(categoryEntity.get().getName());
         categoryDTO.setDescription(categoryEntity.get().getDescription());

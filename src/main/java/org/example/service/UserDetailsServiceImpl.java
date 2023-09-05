@@ -53,8 +53,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             log.info(username + " have roles " + user.get().getRoles());
         }
         log.info("UserDetailsServiceImpl-loadUserByUsername end");
-//        Hibernate.initialize(user.get().getBasketItemEntities());
-//        Hibernate.initialize(user.get().getOrderTableEntities());
+
         return new UserDetailsImpl(user.get());
     }
 

@@ -1,16 +1,20 @@
 package org.example.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.security.jwt.Token;
 
 import java.util.List;
 import java.util.Set;
 
-
 @Entity
 @Table(name = "user", schema = "products_schema")
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Data
 public class UserEntity {
 
@@ -46,8 +50,12 @@ public class UserEntity {
     private Set<UserRole> roles;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "userEntity")
-    List<OrderTableEntity> orderTableEntities;
+    private List<OrderTableEntity> orderTableEntities;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "userEntity")
-    List<BasketItemEntity> basketItemEntities;
+    private List<BasketItemEntity> basketItemEntities;
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
+    private List<Token> tokens;
 }
+
