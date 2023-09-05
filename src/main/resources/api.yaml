@@ -1,0 +1,42 @@
+spring:
+  jpa:
+    hibernate.ddl-auto: update
+    properties:
+    hibernate.dialect: org.hibernate.dialect.MySQLDialect
+    open-in-view: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/products_schema
+    datasource:
+      username: root
+      password: rey48624
+      driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      multipart:
+        max-file-size: 20MB
+        max-request-size: 20MB
+    mvc:
+      locale: ru
+  thymeleaf:
+    enabled: true
+  profiles:
+    active: dev
+
+  regex: /photos/
+
+  pathImg: /C:/newProject/img/
+  #hostname: localhost:8080/slj/
+
+server:
+  servlet:
+    context-path: /slj/
+
+application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 86400000 # a day
+      refresh-token:
+        expiration: 604800000 # 7 days
