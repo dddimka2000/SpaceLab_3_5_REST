@@ -1,5 +1,6 @@
 package org.example.controller.publicController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.example.dto.ProductDto;
 import org.example.entity.ProductEntity;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@Tag(name = "Products", description = "описание, бла-бла-бла")
 public class ProductController {
     final
     ProductService productService;

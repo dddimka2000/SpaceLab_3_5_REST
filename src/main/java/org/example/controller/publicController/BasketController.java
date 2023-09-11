@@ -1,5 +1,6 @@
 package org.example.controller.publicController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.log4j.Log4j2;
 import org.example.entity.BasketItemEntity;
 import org.example.entity.ProductEntity;
@@ -8,6 +9,7 @@ import org.example.service.BasketItemService;
 import org.example.service.FavoriteProductService;
 import org.example.service.ProductService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,8 @@ import java.util.Optional;
 
 @RestController
 @Log4j2
+@PreAuthorize("isAuthenticated()")
+@Tag(name = "BasketController", description = "описание, бла-бла-бла")
 public class BasketController {
     private final
     BasketItemService basketItemService;

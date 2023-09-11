@@ -1,5 +1,6 @@
 package org.example.controller.adminController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.example.dto.OrderTableDTO;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @Log4j2
+@Tag(name = "Order Admin", description = "описание, бла-бла-бла")
 public class OrderAdminController {
     final
     OrderTableService orderTableService;

@@ -1,5 +1,6 @@
 package org.example.controller.adminController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.log4j.Log4j2;
 import org.example.dto.UploadImg;
 import org.example.dto.UserDTO;
@@ -26,6 +27,7 @@ import java.util.*;
 
 @Log4j2
 @RestController
+@Tag(name = "Users Admin", description = "описание, бла-бла-бла")
 public class UsersAdminController {
     @Value("${spring.regex}")
     String regex;

@@ -1,5 +1,6 @@
 package org.example.controller.adminController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.log4j.Log4j2;
 import org.example.entity.UserEntity;
 import org.example.entity.UserRole;
@@ -21,6 +22,7 @@ import java.util.*;
 @Log4j2
 //@PreAuthorize("hasRole('ADMIN')")
 @PreAuthorize("hasAuthority('ADMIN')")
+@Tag(name = "Position Admin", description = "описание, бла-бла-бла")
 public class PositionAdminController {
     final
     UserEntityService userEntityService;

@@ -1,5 +1,6 @@
 package org.example.controller.adminController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.log4j.Log4j2;
 import org.example.dto.ProductDto;
 import org.example.entity.ProductEntity;
@@ -27,6 +28,7 @@ import java.util.UUID;
 
 @Log4j2
 @RestController
+@Tag(name = "Product Admin", description = "описание, бла-бла-бла")
 public class ProductSecondAdminController {
     @Value("${spring.regex}")
     String regex;

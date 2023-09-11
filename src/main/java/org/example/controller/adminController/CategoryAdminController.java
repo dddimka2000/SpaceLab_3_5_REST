@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @RestController
-@Tag(name = "CategoryAdminController", description = "API for managing Category data")
+@Tag(name = "Category Admin", description = "описание, бла-бла-бла")
 public class CategoryAdminController {
     @Value("${spring.regex}")
     String regex;

@@ -2,6 +2,7 @@ package org.example.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.entity.UserEntity;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Enumeration;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -52,11 +55,11 @@ public class AuthenticationService {
         );
         var user = userRepository.findByLogin(request.getEmail())
                 .orElseThrow();
-        //TODO Login
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
+        saveUserToken(user, refreshToken);
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
@@ -85,7 +88,7 @@ public class AuthenticationService {
         tokenRepository.saveAll(validUserTokens);
     }
 
-    public void refreshToken(
+    public String refreshToken(
             HttpServletRequest request,
             HttpServletResponse response
     ) throws IOException {
@@ -93,14 +96,13 @@ public class AuthenticationService {
         final String refreshToken;
         final String userEmail;
         if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            return;
+            return null;
         }
         refreshToken = authHeader.substring(7);
         userEmail = jwtService.extractUsername(refreshToken);
         if (userEmail != null) {
             var user = this.userRepository.findByLogin(userEmail)
                     .orElseThrow();
-            //TODO Login
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
                 revokeAllUserTokens(user);
@@ -110,7 +112,9 @@ public class AuthenticationService {
                         .refreshToken(refreshToken)
                         .build();
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
+                return refreshToken;
             }
         }
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 package org.example.controller.adminController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.log4j.Log4j2;
 import org.example.entity.FavoriteProductEntity;
 import org.example.entity.UserEntity;
@@ -21,6 +22,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin")
 @Log4j2
+@Tag(name = "Главная страница Admin", description = "описание, бла-бла-бла")
 public class MainAdminPage {
     private final
     UserEntityService userEntityService;

@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Logger;
@@ -31,6 +32,7 @@ import java.util.*;
 @RestController
 @Log4j2
 @RequestMapping("/personal_account")
+@Tag(name = "Personal Account", description = "описание, бла-бла-бла")
 public class PersonalAccountController {
     private final
     UserValidator userValidator;

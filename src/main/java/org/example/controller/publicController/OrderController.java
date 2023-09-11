@@ -1,6 +1,7 @@
 package org.example.controller.publicController;
 
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.example.controller.adminController.ClassificationAdminController;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @Log4j2
+@Tag(name = "Orders by user", description = "описание, бла-бла-бла")
 public class OrderController {
     final
     OrderValidator orderValidator;

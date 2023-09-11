@@ -1,5 +1,6 @@
 package org.example.controller.adminController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +26,7 @@ import java.util.Optional;
 @Log4j2
 @RestController
 @RequestMapping("/admin/classifications")
+@Tag(name = "Classification Admin", description = "описание, бла-бла-бла")
 public class ClassificationAdminController {
     String OldName = null;
 

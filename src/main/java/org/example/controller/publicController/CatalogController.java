@@ -1,5 +1,6 @@
 package org.example.controller.publicController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.log4j.Log4j2;
 import org.example.dto.CategoryDTO;
 import org.example.entity.CategoryEntity;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @Log4j2
+@Tag(name = "Catalog", description = "описание, бла-бла-бла")
 public class CatalogController {
     final
     ClassificationService classificationService;

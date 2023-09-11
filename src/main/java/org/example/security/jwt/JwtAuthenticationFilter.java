@@ -25,35 +25,7 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-
-//public class JwtTokenFilter extends GenericFilterBean {
-//
-//    private JwtTokenProvider jwtTokenProvider;
-//
-//    public JwtTokenFilter(JwtTokenProvider jwtTokenProvider) {
-//        this.jwtTokenProvider = jwtTokenProvider;
-//    }
-//
-//    @Override
-//    public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
-//            throws IOException, ServletException {
-//
-//
-//        String token = null;
-//        token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
-//
-//        if (token != null && jwtTokenProvider.validateToken(token)) {
-//            Authentication auth = jwtTokenProvider.getAuthentication(token);
-//
-//            if (auth != null) {
-//                SecurityContextHolder.getContext().setAuthentication(auth);
-//            }
-//        }
-//        filterChain.doFilter(req, res);
-//    }
-//
-//}
-
+import java.util.Enumeration;
 
 @Component
 @RequiredArgsConstructor
@@ -73,11 +45,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt;
         final String userEmail;
         log.info("authHeader "+authHeader);
-        jwt = authHeader.substring(7);
-        log.info("jwt "+jwt);
+
         if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
+        }
+        jwt = authHeader.substring(7);
+        log.info("jwt "+jwt);
+        Enumeration<String> parameterNames = request.getParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            String paramName = parameterNames.nextElement();
+            String[] paramValues = request.getParameterValues(paramName);
+            for (String paramValue : paramValues) {
+                System.out.println("Parameter: " + paramName + " = " + paramValue);
+            }
+        }
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            Enumeration<String> headerValues = request.getHeaders(headerName);
+            while (headerValues.hasMoreElements()) {
+                String headerValue = headerValues.nextElement();
+                System.out.println("Header: " + headerName + " = " + headerValue);
+            }
         }
         userEmail = jwtService.extractUsername(jwt);
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {

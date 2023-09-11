@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.example.dto.UserDTO;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @Log4j2
+@Tag(name = "Registration без токена", description = "описание, бла-бла-бла")
 public class RegistrationController {
     private final
     UserValidator userValidator;
